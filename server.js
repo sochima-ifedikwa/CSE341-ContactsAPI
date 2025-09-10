@@ -1,7 +1,10 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const app = express();
 
-app.use('/', require('./routes/index'));
+const mongodb = require('./routes/data/database')
+
+app.use('/', require('./routes/contacts'));
 
 const port = process.env.PORT ||3000;
 app.listen(port, () => {
