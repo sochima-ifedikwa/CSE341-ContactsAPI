@@ -2,11 +2,13 @@
 GET http://localhost:3000/contacts
 
 ### GET CONTACT BY ID
-
-GET http://localhost:3000/contacts/643dcbf4f3a3b9b1c4e4f8a1
+GET http://localhost:3000/contacts/68c17583d638f6ad4614476e
 
 ### RENDER CONNECTION TEST
 GET https://cse341-contactsapi-o42n.onrender.com/contacts
+
+### RENDER CONNECTION TEST BY ID
+GET https://cse341-contactsapi-o42n.onrender.com/contacts/68c17583d638f6ad4614476e
 
 
  
