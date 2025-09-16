@@ -11,6 +11,29 @@ GET https://cse341-contactsapi-o42n.onrender.com/contacts
 GET https://cse341-contactsapi-o42n.onrender.com/contacts/68c17583d638f6ad4614476e
 
 
- 
+### CREATE A NEW CONTACT
+POST http://localhost:3000/contacts
+Content-Type: application/json
 
+{
+    "firstName": "Patricia",
+    "lastName": "Mensah",
+    "email": "mensahpatricia@gmail.com",
+    "favoriteColor": "Blue",
+    "birthday": "01/23/1998"
+}
 
+### UPDATE A CONTACT
+PUT http://localhost:3000/contacts/68c17583d638f6ad4614476e
+Content-Type: application/json
+
+{
+    "firstName": "Sochima",
+    "lastName": "Ifedikwa",
+    "email": "sifedikwa@byupathway.edu",
+    "favoriteColor": "Blue",
+    "birthday": "04//11/2001"
+}
+
+### DELETE A CONTACT
+DELETE http://localhost:3000/contacts/68c981d16b3669d60ebdffc8
