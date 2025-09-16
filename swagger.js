@@ -5,7 +5,7 @@ const doc = {
     title: 'Contacts API',
     description: 'API for managing contacts'
   },
-  host: 'https://cse341-contactsapi-o42n.onrender.com', 
+  host: 'cse341-contactsapi-o42n.onrender.com', 
   schemes: ['https'],
 };
 
@@ -17,3 +17,4 @@ root file where the route starts, such as index.js, app.js, routes.js, etc ... *
 
 swaggerAutogen(outputFile, routes, doc);
 
+  
