@@ -5,8 +5,8 @@ const doc = {
     title: 'Contacts API',
     description: 'API for managing contacts'
   },
-  host: 'cse341-contactsapi-o42n.onrender.com', 
-  schemes: ['https'],
+  host: 'localhost:3000',
+  schemes: ['http'],
 };
 
 const outputFile = './swagger.json'; // Output file for the generated Swagger documentation should be created in the root directory EMPTY
