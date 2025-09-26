@@ -4,10 +4,8 @@ const ObjectId = require('mongodb').ObjectId;
 
 const getAll = async (req, res) => {
     //#swagger.tags = ['Contacts']
-    mongodb.getDatabase().db('contacts').collection('contacts').find().toArray((err, contacts) => {
-        if (err) {
-            res.status(400).json({ message: err});
-        }
+    const result = await mongodb.getDatabase().db('contacts').collection('contacts').find();
+    result.toArray().then((contacts) => {
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(contacts);
     });
@@ -15,14 +13,9 @@ const getAll = async (req, res) => {
 
 const getSingle = async (req, res) => {
     //#swagger.tags = ['Contacts']
-        if (!ObjectId.isValid(req.params.id)) {
-        res.status(400).json('Must use a valid contact id to get a contact.');
-    }
     const userId = new ObjectId(req.params.id);
-    mongodb.getDatabase().db('contacts').collection('contacts').find({ _id: userId }).toArray((err, contacts) => {
-        if (err) {
-            res.status(400).json({ message: err});
-        }
+    const result = await mongodb.getDatabase().db('contacts').collection('contacts').find({ _id: userId });
+    result.toArray().then((contacts) => {
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(contacts[0]);
     });
@@ -47,9 +40,6 @@ const createContact = async (req, res) => {
 
 const updateContact = async (req, res) => {
     //#swagger.tags = ['Contacts']
-        if (!ObjectId.isValid(req.params.id)) {
-        res.status(400).json('Must use a valid contact id to update a contact.');
-    }
     const userId = new ObjectId(req.params.id);
     const contact = {
         firstName: req.body.firstName,
@@ -68,10 +58,6 @@ const updateContact = async (req, res) => {
 
 const deleteContact = async (req, res) => {
     //#swagger.tags = ['Contacts']
-        if (!ObjectId.isValid(req.params.id)) {
-        res.status(400).json('Must use a valid contact id to delete a contact.');
-        return;
-    }
     const userId = new ObjectId(req.params.id);
     const result = await mongodb.getDatabase().db('contacts').collection('contacts').deleteOne({ _id: userId });
     if (result.deletedCount > 0) {
