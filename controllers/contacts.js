@@ -41,47 +41,109 @@ const getSingle = async (req, res) => {
 
 const createContact = async (req, res) => {
     //#swagger.tags = ['Contacts']
-    const contact = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        favoriteColor: req.body.favoriteColor,
-        birthday: req.body.birthday
-    };
-    const result = await mongodb.getDatabase().db('contacts').collection('contacts').insertOne(contact);
-    if (result.acknowledged) {
-        res.status(201).send();
-    } else {
-        res.status(500).json(result.error || 'Some error occurred while creating the contact.');
+    try {
+        const contact = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            favoriteColor: req.body.favoriteColor,
+            birthday: req.body.birthday
+        };
+        
+        const result = await mongodb.getDatabase().db('contacts').collection('contacts').insertOne(contact);
+        
+        if (result.acknowledged) {
+            res.status(201).json({
+                message: 'Contact created successfully',
+                contactId: result.insertedId
+            });
+        } else {
+            res.status(500).json({ 
+                message: 'Failed to create contact'
+            });
+        }
+    } catch (error) {
+        console.error('Error creating contact:', error);
+        res.status(500).json({ 
+            message: 'Error creating contact',
+            error: error.message 
+        });
     }
 };
 
 const updateContact = async (req, res) => {
     //#swagger.tags = ['Contacts']
-    const userId = new ObjectId(req.params.id);
-    const contact = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        favoriteColor: req.body.favoriteColor,
-        birthday: req.body.birthday
-    };
-    const result = await mongodb.getDatabase().db('contacts').collection('contacts').updateOne({ _id: userId }, { $set: contact });
-    if (result.modifiedCount > 0) {
-        res.status(200).send();
-    } else {
-        res.status(500).json(result.error || 'Some error occurred while updating the contact.');
+    try {
+        // Validate ID format
+        if (!req.params.id || !ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid contact ID format'
+            });
+        }
+
+        const userId = new ObjectId(req.params.id);
+        const contact = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            favoriteColor: req.body.favoriteColor,
+            birthday: req.body.birthday
+        };
+
+        const result = await mongodb.getDatabase().db('contacts').collection('contacts').updateOne(
+            { _id: userId }, 
+            { $set: contact }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                message: `Contact with ID ${req.params.id} not found`
+            });
+        }
+
+        if (result.modifiedCount > 0) {
+            res.status(200).json({
+                message: 'Contact updated successfully'
+            });
+        } else {
+            res.status(200).json({
+                message: 'No changes made to the contact'
+            });
+        }
+    } catch (error) {
+        console.error('Error updating contact:', error);
+        res.status(500).json({ message:error });
     }
 };
 
 const deleteContact = async (req, res) => {
     //#swagger.tags = ['Contacts']
-    const userId = new ObjectId(req.params.id);
-    const result = await mongodb.getDatabase().db('contacts').collection('contacts').deleteOne({ _id: userId });
-    if (result.deletedCount > 0) {
-        res.status(200).send();
-    } else {
-        res.status(500).json(result.error || 'Some error occurred while deleting the contact.');
+    try {
+        // Validate ID format
+        if (!req.params.id || !ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({
+                message: 'Invalid contact ID format'
+            });
+        }
+
+        const userId = new ObjectId(req.params.id);
+        const result = await mongodb.getDatabase().db('contacts').collection('contacts').deleteOne({ _id: userId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: `Contact with ID ${req.params.id} not found`
+            });
+        }
+
+        res.status(200).json({
+            message: 'Contact deleted successfully'
+        });
+    } catch (error) {
+        console.error('Error deleting contact:', error);
+        res.status(500).json({
+            message: 'Error deleting contact',
+            error: error.message
+        });
     }
 };
 
